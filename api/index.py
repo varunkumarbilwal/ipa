@@ -70,67 +70,8 @@ def user(purl):
     articles2 = soup2.find('a')['href']
     plistu = articles2.split("url=")
     fplist = plistu[1]
-    
-    local_file = purl + ".plist"
-    pcont = requests.get(fplist)
-    ptxt = pcont.text
-    myroot = ET.fromstring(ptxt)
-    iurl = myroot[0][1][0][1][0][3].text #ipa url
-    iname = myroot[0][1][0][1][2][5].text #ipa name
-    ibdl = myroot[0][1][0][3][1].text #ipa bundle id
-    
-    plname = purl + '.plist'
-    pfname = ''
-    plpath = plname
-    plisttemp = '''<plist version="1.0">
-    <dict>
-        <key>items</key>
-        <array>
-            <dict>
-                <key>assets</key>
-                <array>
-                    <dict>
-                        <key>kind</key>
-                        <string>software-package</string>
-                        <key>url</key>
-                        <string>https://up-ipa.xyz/share/oZpKD3u7BqRSEtwX/direct</string>
-                    </dict>
-                    <dict>
-                        <key>kind</key>
-                        <string>display-image</string>
-                        <key>needs-shine</key>
-                        <true/>
-                        <key>url</key>
-                        <string>https://ipa-apps.me/ipaapps.png</string>
-                    </dict>
-                    <dict>
-                        <key>kind</key>
-                        <string>full-size-image</string>
-                        <key>needs-shine</key>
-                        <true/>
-                        <key>url</key>
-                        <string>SpooferPro</string>
-                    </dict>
-                </array>
-                <key>metadata</key>
-                <dict>
-                    <key>bundle-identifier</key>
-                    <string>com.SpooferPro.ipa-apps54336995</string>
-                    <key>bundle-version</key>
-                    <string>1</string>
-                    <key>kind</key>
-                    <string>software</string>
-                    <key>title</key>
-                    <string>SpooferPro</string>
-                </dict>
-            </dict>
-        </array>
-    </dict>
-</plist>
-        '''
 
-
-    return render_template("install.html", plisturl=plpath)
+    return render_template("install.html", plisturl=fplist)
 
 
 
