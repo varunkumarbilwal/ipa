@@ -6,6 +6,7 @@ from os import path
 import sys
 import stat
 import xml.etree.ElementTree as ET
+import wget
 from flask import Flask, render_template
 
 app = Flask(__name__)
@@ -57,14 +58,9 @@ certtext = certname.text
 cert = certtext.split('"')
 fcert = cert[1]
 
-
 @app.route("/")
 def home():
     return render_template("index.html", certname=fcert,len=len(hrefs), simgsrc=imgsrcs, stitle=titles, shref=hrefs)
-
-
-
-
 
 @app.route("/install/<purl>")
 def user(purl):
@@ -74,17 +70,18 @@ def user(purl):
     articles2 = soup2.find('a')['href']
     plistu = articles2.split("url=")
     fplist = plistu[1]
+    
+    local_file = purl + ".plist"
     pcont = requests.get(fplist)
     ptxt = pcont.text
     myroot = ET.fromstring(ptxt)
     iurl = myroot[0][1][0][1][0][3].text #ipa url
     iname = myroot[0][1][0][1][2][5].text #ipa name
     ibdl = myroot[0][1][0][3][1].text #ipa bundle id
-    f = open("favtutor.txt", "w")
-    f.write("Overwriting a file in Python.")
+    
     plname = purl + '.plist'
-    pfname = 'plists'
-    plpath = pfname + '/' + plname
+    pfname = ''
+    plpath = plname
     plisttemp = '''<plist version="1.0">
     <dict>
         <key>items</key>
@@ -131,14 +128,6 @@ def user(purl):
     </dict>
 </plist>
         '''
-    if path.exists(plname):
-        f = open(plpath, "w")
-        f.write(plisttemp)
-        os.chmod(plpath, stat.S_IRWXO)
-    else:
-        f = open(plpath, "w")
-        f.write(plisttemp)
-        os.chmod(plpath, stat.S_IRWXO)
 
 
     return render_template("install.html", plisturl=plpath)
